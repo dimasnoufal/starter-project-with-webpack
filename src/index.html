@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="StoryShare - Platform berbagi cerita inspiratif dengan foto dan lokasi" />
+    <meta name="theme-color" content="#4f46e5" />
+    <link rel="shortcut icon" href="favicon.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+    <title>StoryShare - Berbagi Cerita</title>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-to-content">Lewati ke konten utama</a>
+
+    <header>
+      <div class="main-header container">
+        <a class="brand-name" href="#/">StoryShare</a>
+
+        <nav id="navigation-drawer" class="navigation-drawer" aria-label="Menu navigasi utama">
+          <ul id="nav-list" class="nav-list">
+            <li><a href="#/">Beranda</a></li>
+            <li><a href="#/saved">&#9825; Tersimpan</a></li>
+            <li><a href="#/add">Tambah Cerita</a></li>
+            <li id="nav-auth-item"><a href="#/login" id="nav-auth-link">Masuk</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-actions">
+          <button
+            id="notification-btn"
+            class="notif-btn"
+            aria-label="Aktifkan notifikasi"
+            title="Toggle notifikasi push"
+          >🔔</button>
+
+          <button
+            id="drawer-button"
+            class="drawer-button"
+            aria-label="Buka menu navigasi"
+            aria-expanded="false"
+            aria-controls="navigation-drawer"
+          >☰</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="main-content" tabindex="-1"></main>
+
+    <footer>
+      <div class="main-footer container">
+        <p>&copy; 2025 StoryShare. Semua hak dilindungi.</p>
+      </div>
+    </footer>
+  </body>
+</html>
