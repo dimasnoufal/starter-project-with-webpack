@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Register service worker
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      const registration = await navigator.serviceWorker.register('./sw.js');
       console.log('SW registered:', registration.scope);
 
       // Prompt update when new SW is waiting

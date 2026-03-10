@@ -17,11 +17,24 @@ export async function isNotificationSupported() {
   return 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window;
 }
 
+async function getReadySW(timeoutMs = 5000) {
+  return Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Service worker timeout')), timeoutMs)
+    ),
+  ]);
+}
+
 export async function getSubscriptionStatus() {
   if (!(await isNotificationSupported())) return false;
-  const registration = await navigator.serviceWorker.ready;
-  const subscription = await registration.pushManager.getSubscription();
-  return !!subscription;
+  try {
+    const registration = await getReadySW();
+    const subscription = await registration.pushManager.getSubscription();
+    return !!subscription;
+  } catch (_) {
+    return false;
+  }
 }
 
 export async function subscribePushNotification() {
@@ -34,8 +47,7 @@ export async function subscribePushNotification() {
     throw new Error('Izin notifikasi ditolak.');
   }
 
-  const registration = await navigator.serviceWorker.ready;
-
+  const registration = await getReadySW();
   let subscription = await registration.pushManager.getSubscription();
   if (!subscription) {
     subscription = await registration.pushManager.subscribe({
@@ -68,7 +80,7 @@ export async function subscribePushNotification() {
 export async function unsubscribePushNotification() {
   if (!(await isNotificationSupported())) return;
 
-  const registration = await navigator.serviceWorker.ready;
+  const registration = await getReadySW();
   const subscription = await registration.pushManager.getSubscription();
   if (!subscription) return;
 

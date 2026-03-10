@@ -71,22 +71,20 @@ class App {
     const btn = document.querySelector('#notification-btn');
     if (!btn) return;
 
-    const supported = await isNotificationSupported();
-    if (!supported) {
+    // Check support synchronously first
+    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
       btn.style.display = 'none';
       return;
     }
 
-    const updateBtnState = async () => {
-      const isSubscribed = await getSubscriptionStatus();
+    const updateBtnState = async (isSubscribed) => {
       btn.innerHTML = isSubscribed ? '🔕' : '🔔';
       btn.setAttribute('aria-label', isSubscribed ? 'Nonaktifkan notifikasi' : 'Aktifkan notifikasi');
       btn.title = isSubscribed ? 'Notifikasi aktif — klik untuk nonaktifkan' : 'Aktifkan notifikasi push';
       btn.classList.toggle('notif-active', isSubscribed);
     };
 
-    await updateBtnState();
-
+    // Pasang event listener DULU — jangan tunggu async di atas
     btn.addEventListener('click', async () => {
       if (!Auth.isLoggedIn()) {
         showAlert('Silakan masuk terlebih dahulu untuk mengaktifkan notifikasi.', 'error');
@@ -97,18 +95,27 @@ class App {
         const isSubscribed = await getSubscriptionStatus();
         if (isSubscribed) {
           await unsubscribePushNotification();
+          await updateBtnState(false);
           showAlert('Notifikasi berhasil dinonaktifkan.', 'success');
         } else {
           await subscribePushNotification();
+          await updateBtnState(true);
           showAlert('Notifikasi berhasil diaktifkan!', 'success');
         }
-        await updateBtnState();
       } catch (err) {
         showAlert(`Notifikasi: ${err.message}`, 'error');
       } finally {
         btn.disabled = false;
       }
     });
+
+    // Update tampilan awal di background (tidak block event listener)
+    try {
+      const isSubscribed = await getSubscriptionStatus();
+      await updateBtnState(isSubscribed);
+    } catch (_) {
+      // SW belum ready, biarkan default icon
+    }
   }
 
   async renderPage() {
