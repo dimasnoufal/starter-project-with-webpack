@@ -3,9 +3,14 @@ import { registerRoute } from 'workbox-routing';
 import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { clientsClaim } from 'workbox-core';
 
 const STORY_API_CACHE = 'storyshare-api-v1';
 const IMAGE_CACHE = 'storyshare-images-v1';
+
+// Langsung ambil kendali semua tab tanpa perlu reload manual
+self.skipWaiting();
+clientsClaim();
 
 // Precache webpack-generated assets (injected by workbox at build time)
 precacheAndRoute(self.__WB_MANIFEST || []);
@@ -56,6 +61,8 @@ registerRoute(
 // --- Push Notification ---
 // API sends: { "title": "...", "options": { "body": "..." } }
 self.addEventListener('push', (event) => {
+  console.log('[SW] Push event received', event.data?.text());
+
   let title = 'StoryShare';
   let options = {
     body: 'Ada cerita baru untukmu!',
@@ -78,7 +85,11 @@ self.addEventListener('push', (event) => {
     }
   }
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+      .then(() => console.log('[SW] Notification shown:', title))
+      .catch((err) => console.error('[SW] showNotification failed:', err))
+  );
 });
 
 // --- Notification click: open story detail ---
