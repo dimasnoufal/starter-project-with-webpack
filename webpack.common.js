@@ -8,7 +8,7 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
     clean: true,
   },
   module: {
@@ -27,11 +27,11 @@ module.exports = {
       patterns: [
         {
           from: path.resolve(__dirname, 'src/public/'),
-          to: path.resolve(__dirname, 'dist/'),
+          to: path.resolve(__dirname, 'docs/'),
         },
         {
           from: path.resolve(__dirname, 'src/manifest.webmanifest'),
-          to: path.resolve(__dirname, 'dist/manifest.webmanifest'),
+          to: path.resolve(__dirname, 'docs/manifest.webmanifest'),
         },
       ],
     }),
