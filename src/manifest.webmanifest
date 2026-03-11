@@ -2,7 +2,8 @@
   "name": "StoryShare - Berbagi Cerita",
   "short_name": "StoryShare",
   "description": "Platform berbagi cerita inspiratif dengan foto dan lokasi",
-  "start_url": "/",
+  "start_url": "/starter-project-with-webpack/",
+  "scope": "/starter-project-with-webpack/",
   "display": "standalone",
   "background_color": "#f9fafb",
   "theme_color": "#4f46e5",
@@ -78,7 +79,7 @@
       "name": "Tambah Cerita",
       "short_name": "Tambah",
       "description": "Bagikan cerita baru",
-      "url": "/#/add",
+      "url": "/starter-project-with-webpack/#/add",
       "icons": [
         {
           "src": "icons/icon-96x96.png",
@@ -90,7 +91,7 @@
       "name": "Cerita Tersimpan",
       "short_name": "Tersimpan",
       "description": "Lihat cerita yang disimpan",
-      "url": "/#/saved",
+      "url": "/starter-project-with-webpack/#/saved",
       "icons": [
         {
           "src": "icons/icon-96x96.png",

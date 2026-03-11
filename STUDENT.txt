@@ -1,2 +1,2 @@
 APP_URL=https://dimasnoufal.github.io/starter-project-with-webpack/
-MAP_SERVICE_API_KEY=<api_key>
+MAP_SERVICE_API_KEY=

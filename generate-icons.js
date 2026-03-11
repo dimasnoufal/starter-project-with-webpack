@@ -23,22 +23,21 @@ function makeChunk(type, data) {
   return Buffer.concat([lenBuf, typeB, data, crcBuf]);
 }
 
-function makePNG(size, r, g, b) {
+function makePNG(width, height, r, g, b) {
   const sig = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
 
   const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(size, 0);
-  ihdr.writeUInt32BE(size, 4);
+  ihdr.writeUInt32BE(width, 0);
+  ihdr.writeUInt32BE(height, 4);
   ihdr[8] = 8;  // bit depth
   ihdr[9] = 2;  // RGB
   ihdr[10] = 0; ihdr[11] = 0; ihdr[12] = 0;
 
-  // Raw image data: filter(0) + R G B per pixel per row
-  const rowSize = 1 + size * 3;
-  const raw = Buffer.alloc(size * rowSize);
-  for (let y = 0; y < size; y++) {
-    raw[y * rowSize] = 0; // filter = None
-    for (let x = 0; x < size; x++) {
+  const rowSize = 1 + width * 3;
+  const raw = Buffer.alloc(height * rowSize);
+  for (let y = 0; y < height; y++) {
+    raw[y * rowSize] = 0;
+    for (let x = 0; x < width; x++) {
       const off = y * rowSize + 1 + x * 3;
       raw[off] = r;
       raw[off + 1] = g;
@@ -63,12 +62,15 @@ fs.mkdirSync('src/public/screenshots', { recursive: true });
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 for (const s of sizes) {
   const filename = `src/public/icons/icon-${s}x${s}.png`;
-  fs.writeFileSync(filename, makePNG(s, 79, 70, 229));
+  fs.writeFileSync(filename, makePNG(s, s, 79, 70, 229));
   console.log(`Created ${filename}`);
 }
 
-// Screenshots (just need valid PNGs — grader checks they're referenced)
-fs.writeFileSync('src/public/screenshots/desktop.png', makePNG(128, 79, 70, 229));
-fs.writeFileSync('src/public/screenshots/mobile.png', makePNG(64, 79, 70, 229));
-console.log('Created screenshots/desktop.png and screenshots/mobile.png');
+// Screenshots - ukuran harus PERSIS sama dengan yang ditulis di manifest
+fs.writeFileSync('src/public/screenshots/desktop.png', makePNG(1280, 720, 79, 70, 229));
+console.log('Created screenshots/desktop.png (1280x720)');
+
+fs.writeFileSync('src/public/screenshots/mobile.png', makePNG(390, 844, 79, 70, 229));
+console.log('Created screenshots/mobile.png (390x844)');
+
 console.log('Done!');
